@@ -10,12 +10,11 @@ const SignInSchema = z
   .object({
     methodId: formFields.text.optional(),
     email: formFields.text.email().describe("Email // Enter your email"),
-    code: formFields.text
-      .describe("Code // Enter the code you received")
-      .optional(),
+    code: formFields.text.describe("Code // Enter the code you received"),
   })
   .refine(
     (data) => {
+      console.log("data", data);
       if (data.methodId && !data.code) {
         return false;
       }
@@ -33,26 +32,32 @@ export const SignInScreen = () => {
 
   const form = useForm<z.infer<typeof SignInSchema>>();
 
-  async function handleSubmit({ methodId }: z.infer<typeof SignInSchema>) {
-    console.log("handleSubmit", methodId);
+  async function handleSubmit({
+    methodId,
+    email,
+    code,
+  }: z.infer<typeof SignInSchema>) {
     if (!methodId) {
-      const email = form.getValues("email");
-      const { methodId: newMethodId, statusCode } = await sendCode({ email });
+      const { methodId: newMethodId, statusCode } = await sendCode({
+        email: email.toLowerCase(),
+      });
       if (statusCode === 200) {
         form.setValue("methodId", newMethodId);
       }
     } else {
-      const code = form.getValues("code");
       if (!code) return;
       const { success } = await loginWithCode({ methodId, code });
       if (success) {
-        router.replace("/");
+        form.reset();
+        router.replace("/(tabs)");
         return;
       }
 
       form.setError("code", { type: "custom", message: "Unable to login" });
     }
   }
+
+  const methodId = form.watch("methodId");
 
   return (
     <FormProvider {...form}>
@@ -82,14 +87,14 @@ export const SignInScreen = () => {
           );
         }}
       >
-        {({ methodId, code, email }) => (
+        {({ code, email }) => (
           <>
             <YStack gap="$3" mb="$4">
               <H2 $sm={{ size: "$8" }}>Welcome Back</H2>
               <Paragraph theme="alt1">Sign in to your account</Paragraph>
             </YStack>
             {!methodId && email}
-            {methodId && code}
+            {!!methodId && code}
           </>
         )}
       </SchemaForm>

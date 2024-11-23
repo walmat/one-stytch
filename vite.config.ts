@@ -13,12 +13,17 @@ export default {
         defaultRenderMode: 'ssg',
       },
 
-      // NOTE: Uncomment this to fix buildtime error
-      // deps: {
-      //   "@stytch/react-native": {
-      //     '**/*.js':['flow', 'jsx']
-      //   }
-      // },
+      deps: {
+        "@stytch/react-native": {
+          '**/*.js':['flow', 'jsx']
+        },
+        "@stytch/react-native-inappbrowser-reborn": {
+          '**/*.js':['flow', 'jsx']
+        },
+        'expo-linear-gradient': {
+          '**/*.js': ['flow', 'jsx'],
+        },
+      },
 
       app: {
         key: 'pygmy',

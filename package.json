@@ -1,6 +1,6 @@
 {
   "name": "pygmy",
-  "version": "1.1.330",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -39,11 +39,8 @@
     "drizzle-kit": "^0.24.2",
     "drizzle-orm": "^0.33.0",
     "expo": "~51.0.28",
-    "expo-document-picker": "^13.0.1",
-    "expo-image-picker": "^16.0.2",
-    "expo-modules-core": "^1.12.24",
-    "expo-secure-store": "^14.0.0",
-    "one": "1.1.330",
+    "expo-linear-gradient": "^14.0.1",
+    "one": "1.1.334",
     "path-browserify": "0.0.0",
     "postgres": "^3.4.4",
     "process": "^0.11.0",

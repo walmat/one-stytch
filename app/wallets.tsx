@@ -4,7 +4,7 @@ import { ScrollView } from "tamagui";
 import { PageContainer } from "~/code/ui/PageContainer";
 
 export async function loader({ path }: LoaderProps) {
-  // TODO: Fetch user activity
+  // TODO: Fetch user wallets
   return {};
 }
 

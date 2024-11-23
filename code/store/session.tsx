@@ -1,5 +1,4 @@
 import React from "react";
-import { useRouter } from "one";
 import { useStytchUser, User, useStytch } from "@stytch/react-native";
 
 const AuthContext = React.createContext<{
@@ -39,19 +38,16 @@ export function useSession() {
 export function SessionProvider(props: React.PropsWithChildren) {
   const stytch = useStytch();
   const { user } = useStytchUser();
-  const router = useRouter();
 
   return (
     <AuthContext.Provider
       value={{
         sendCode: async ({ email }) => {
-          const { method_id, status_code } = await stytch.otps.email.send(
-            email,
-            {
+          const { method_id, status_code } =
+            await stytch.otps.email.loginOrCreate(email, {
               expiration_minutes: 5,
               // FIXME: Add email template here?
-            }
-          );
+            });
 
           return {
             statusCode: status_code,
@@ -63,12 +59,11 @@ export function SessionProvider(props: React.PropsWithChildren) {
             code,
             methodId,
             {
-              session_duration_minutes: 60 * 24 * 30,
+              session_duration_minutes: 527040,
             }
           );
 
           if (status_code === 200) {
-            router.replace("/(tabs)");
             return {
               user,
               success: true,

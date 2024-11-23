@@ -16,6 +16,7 @@ export default function TabsLayout() {
             <NotificationsButton />
           </View>
         ),
+        headerTitle: () => null,
         tabBarLabel: () => null,
         headerLeft: () => (
           <Link href="/wallets">
