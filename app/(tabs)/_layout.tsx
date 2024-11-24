@@ -2,7 +2,7 @@ import { Link, Tabs } from "one";
 import { View } from "tamagui";
 import { Logo } from "~/code/brand/Logo";
 import { NotificationsButton } from "~/code/notifications/NotificationsButton";
-import { HomeIcons } from "~/code/home/HomeIcons";
+import { HomeIcons } from "~/code/ui/HomeIcons";
 import { useTheme } from "tamagui";
 
 export default function TabsLayout() {
@@ -16,6 +16,7 @@ export default function TabsLayout() {
             <NotificationsButton />
           </View>
         ),
+        headerTitle: () => null,
         tabBarLabel: () => null,
         headerLeft: () => (
           <Link href="/wallets">

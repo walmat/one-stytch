@@ -1,6 +1,8 @@
-import React from "react";
-import { useRouter } from "one";
+import React, { useEffect } from "react";
 import { useStytchUser, User, useStytch } from "@stytch/react-native";
+import { Href, router } from "one";
+import { useSegments } from "one";
+import { Platform } from "react-native";
 
 const AuthContext = React.createContext<{
   sendCode: ({
@@ -39,19 +41,18 @@ export function useSession() {
 export function SessionProvider(props: React.PropsWithChildren) {
   const stytch = useStytch();
   const { user } = useStytchUser();
-  const router = useRouter();
+
+  useProtectedRoute(user);
 
   return (
     <AuthContext.Provider
       value={{
         sendCode: async ({ email }) => {
-          const { method_id, status_code } = await stytch.otps.email.send(
-            email,
-            {
+          const { method_id, status_code } =
+            await stytch.otps.email.loginOrCreate(email, {
               expiration_minutes: 5,
               // FIXME: Add email template here?
-            }
-          );
+            });
 
           return {
             statusCode: status_code,
@@ -63,12 +64,11 @@ export function SessionProvider(props: React.PropsWithChildren) {
             code,
             methodId,
             {
-              session_duration_minutes: 60 * 24 * 30,
+              session_duration_minutes: 527040,
             }
           );
 
           if (status_code === 200) {
-            router.replace("/(tabs)");
             return {
               user,
               success: true,
@@ -90,3 +90,42 @@ export function SessionProvider(props: React.PropsWithChildren) {
     </AuthContext.Provider>
   );
 }
+
+export function useProtectedRoute(user: User | null) {
+  const segments = useSegments();
+
+  useEffect(() => {
+    const inAuthGroup = segments[0] === "(auth)";
+    console.log("inAuthGroup", inAuthGroup, user);
+
+    if (
+      // If the user is not signed in and the initial segment is not anything in the auth group.
+      !user &&
+      !inAuthGroup
+    ) {
+      // Redirect to the sign-in page.
+      replaceRoute("/sign-in");
+    } else if (user && inAuthGroup) {
+      // Redirect away from the sign-in page.
+      replaceRoute("/");
+    }
+  }, [user, segments]);
+}
+
+/**
+ * temporary fix
+ *
+ * see https://github.com/expo/router/issues/740
+ * see https://github.com/expo/router/issues/745
+ *  */
+const replaceRoute = (href: Href) => {
+  if (Platform.OS === "ios") {
+    setTimeout(() => {
+      router.replace(href);
+    }, 1);
+  } else {
+    setImmediate(() => {
+      router.replace(href);
+    });
+  }
+};

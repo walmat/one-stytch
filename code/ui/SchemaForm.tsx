@@ -12,8 +12,6 @@ import {
   TextField,
   DateField,
   DateSchema,
-  ImagePickerField,
-  ImagePickerSchema,
 } from "~/code/ui/FormFields";
 import { Form, Theme, type FormProps } from "tamagui";
 import { createTsForm, createUniqueFieldSchema } from "@ts-react/form";
@@ -49,7 +47,6 @@ export const formFields = {
    */
   address: createUniqueFieldSchema(AddressSchema, "address"),
   date: createUniqueFieldSchema(DateSchema, "date"),
-  image: createUniqueFieldSchema(ImagePickerSchema, "image"),
 };
 
 // function createFormSchema<T extends ZodRawShape>(getData: (fields: typeof formFields) => T) {
@@ -66,7 +63,6 @@ const mapping = [
   [formFields.select, SelectField] as const,
   [formFields.address, AddressField] as const,
   [formFields.date, DateField] as const,
-  [formFields.image, ImagePickerField] as const,
 ] as const;
 
 const FormComponent = (props: FormProps) => {
@@ -99,15 +95,17 @@ export const SchemaForm: typeof _SchemaForm = ({ ...props }) => {
         <FormWrapper.Body minWidth="100%" $platform-native={{ miw: "100%" }}>
           {props.children
             ? props.children(fields, context)
-            : Object.entries(fields).filter(([key]) => {
-                // Get the original schema definition
-                const schema = (props.schema as any)._def.schema?._def;
-                // Get the shape from the schema
-                const shape = schema?.shape;
-                if (!shape) return true;
-                // Check if the field's schema is an enum
-                return !(shape[key]?._def?.typeName === 'ZodEnum');
-              }).map(([_, field]) => field)}
+            : Object.entries(fields)
+                .filter(([key]) => {
+                  // Get the original schema definition
+                  const schema = (props.schema as any)._def.schema?._def;
+                  // Get the shape from the schema
+                  const shape = schema?.shape;
+                  if (!shape) return true;
+                  // Check if the field's schema is an enum
+                  return !(shape[key]?._def?.typeName === "ZodEnum");
+                })
+                .map(([_, field]) => field)}
         </FormWrapper.Body>
       )}
     </_SchemaForm>

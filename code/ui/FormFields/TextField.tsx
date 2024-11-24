@@ -34,6 +34,7 @@ export const TextField = (
             spellCheck={isEmail ? false : undefined}
             autoCapitalize={isEmail ? "none" : undefined}
             inputMode={isEmail ? "email" : undefined}
+            autoComplete={isEmail ? "email" : "off"}
             value={field.value}
             onChangeText={(text) => field.onChange(text)}
             onBlur={field.onBlur}

@@ -1,14 +1,6 @@
 import { desc, eq, sql } from "drizzle-orm";
-import {
-  type Href,
-  type LoaderProps,
-  SafeAreaView,
-  getURL,
-  href,
-  useLoader,
-} from "one";
+import { type Href, type LoaderProps, getURL, href, useLoader } from "one";
 import { ScrollView } from "react-native";
-import { isWeb } from "tamagui";
 import { db } from "~/code/db/connection";
 import { follows, likes, posts, reposts, users } from "~/code/db/schema";
 import { NotificationCard } from "~/code/notifications/NotificationCard";
