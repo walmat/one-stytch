@@ -3,8 +3,13 @@ import { SchemaForm, formFields } from "~/code/ui/SchemaForm";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { YStack, Theme, Paragraph, H2 } from "tamagui";
-import { useRouter } from "one";
 import { useSession } from "~/code/store/session";
+
+// TODO: Finish this
+/**
+ * 1. Show email when on the code step
+ * 2. add way to get back to email step from code step
+ */
 
 const SignInSchema = z
   .object({
@@ -28,7 +33,6 @@ const SignInSchema = z
 
 export const SignInScreen = () => {
   const { sendCode, loginWithCode } = useSession();
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof SignInSchema>>();
 
@@ -38,26 +42,30 @@ export const SignInScreen = () => {
     code,
   }: z.infer<typeof SignInSchema>) {
     if (!methodId) {
+      const lowercaseEmail = email.toLowerCase();
       const { methodId: newMethodId, statusCode } = await sendCode({
-        email: email.toLowerCase(),
+        email: lowercaseEmail,
       });
-      if (statusCode === 200) {
-        form.setValue("methodId", newMethodId);
+
+      if (statusCode !== 200) {
+        // TODO: Add proper toast error handling
       }
+
+      // NOTE: this is a workaround to the form to not be stuck in isSubmitting while waiting for the code to be given
+      form.setValue("methodId", newMethodId);
+      form.formState.isSubmitting = false;
+      form.trigger();
     } else {
-      if (!code) return;
       const { success } = await loginWithCode({ methodId, code });
       if (success) {
         form.reset();
-        router.replace("/(tabs)");
         return;
       }
 
+      // TODO: Add proper toast error handling
       form.setError("code", { type: "custom", message: "Unable to login" });
     }
   }
-
-  const methodId = form.watch("methodId");
 
   return (
     <FormProvider {...form}>
@@ -71,15 +79,10 @@ export const SignInScreen = () => {
         }}
         onSubmit={handleSubmit}
         renderAfter={({ submit }) => {
-          const onPress = () => {
-            console.log("here");
-            submit();
-          };
-
           return (
             <>
               <Theme inverse>
-                <SubmitButton onPress={onPress} br="$10">
+                <SubmitButton onPress={submit} br="$10">
                   Sign In
                 </SubmitButton>
               </Theme>
@@ -87,16 +90,23 @@ export const SignInScreen = () => {
           );
         }}
       >
-        {({ code, email }) => (
-          <>
-            <YStack gap="$3" mb="$4">
-              <H2 $sm={{ size: "$8" }}>Welcome Back</H2>
-              <Paragraph theme="alt1">Sign in to your account</Paragraph>
-            </YStack>
-            {!methodId && email}
-            {!!methodId && code}
-          </>
-        )}
+        {({ code, email }) => {
+          const methodId = form.watch("methodId");
+          return (
+            <>
+              <YStack gap="$3" mb="$4">
+                <H2 $sm={{ size: "$8" }}>Welcome Back</H2>
+                <Paragraph theme="alt1">
+                  {!methodId
+                    ? "Sign in to your account"
+                    : `Enter the code you received`}
+                </Paragraph>
+              </YStack>
+              {!methodId && email}
+              {!!methodId && code}
+            </>
+          );
+        }}
       </SchemaForm>
     </FormProvider>
   );

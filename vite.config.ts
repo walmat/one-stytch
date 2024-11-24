@@ -23,6 +23,10 @@ export default {
         'expo-linear-gradient': {
           '**/*.js': ['flow', 'jsx'],
         },
+        '@sentry/react-native': {
+          version: '~15.2.0',
+          '**/*.js': ['jsx']
+        }
       },
 
       app: {
