@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useStytchUser, User, useStytch } from "@stytch/react-native";
+import { Href, router } from "one";
+import { useSegments } from "one";
+import { Platform } from "react-native";
 
 const AuthContext = React.createContext<{
   sendCode: ({
@@ -38,6 +41,8 @@ export function useSession() {
 export function SessionProvider(props: React.PropsWithChildren) {
   const stytch = useStytch();
   const { user } = useStytchUser();
+
+  useProtectedRoute(user);
 
   return (
     <AuthContext.Provider
@@ -85,3 +90,46 @@ export function SessionProvider(props: React.PropsWithChildren) {
     </AuthContext.Provider>
   );
 }
+
+export function useProtectedRoute(user: User | null) {
+  const segments = useSegments();
+
+  useEffect(() => {
+    const inAuthGroup = segments[0] === "(auth)";
+
+    if (
+      // If the user is not signed in and the initial segment is not anything in the auth group.
+      !user &&
+      !inAuthGroup
+    ) {
+      // Redirect to the sign-in page.
+      replaceRoute("/sign-in");
+    } else if (user && inAuthGroup) {
+      if (!user.crypto_wallets.length) {
+        // Redirect to the onboarding page.
+        replaceRoute("/onboarding");
+      } else {
+        // Redirect away from the sign-in page.
+        replaceRoute("/");
+      }
+    }
+  }, [user, segments]);
+}
+
+/**
+ * temporary fix
+ *
+ * see https://github.com/expo/router/issues/740
+ * see https://github.com/expo/router/issues/745
+ *  */
+const replaceRoute = (href: Href) => {
+  if (Platform.OS === "ios") {
+    setTimeout(() => {
+      router.replace(href);
+    }, 1);
+  } else {
+    setImmediate(() => {
+      router.replace(href);
+    });
+  }
+};

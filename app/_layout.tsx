@@ -4,11 +4,10 @@ import "~/code/styles/tamagui.css";
 import "./_layout.css";
 
 import { SchemeProvider, useColorScheme } from "@vxrn/color-scheme";
-import { LoadProgressBar } from "one";
-import { isWeb, TamaguiProvider } from "tamagui";
-import config from "../config/tamagui.config";
-import { SessionProvider } from "~/code/store/session";
-import { RootLayout } from "~/code/root/RootLayout";
+import { LoadProgressBar, Slot, Stack } from "one";
+import { isWeb, TamaguiProvider, View } from "tamagui";
+import config from "~/config/tamagui.config";
+import { SessionProvider } from "~/code/auth/session";
 import { StytchProvider, StytchClient } from "@stytch/react-native";
 
 const stytch = new StytchClient(process.env.VITE_STYTCH_PUBLIC_TOKEN ?? "");
@@ -34,7 +33,9 @@ export default function Layout() {
         <SessionProvider>
           <SchemeProvider>
             <TamaguiRootProvider>
-              <RootLayout />
+              <View f={1}>
+                <Slot />
+              </View>
             </TamaguiRootProvider>
           </SchemeProvider>
         </SessionProvider>
