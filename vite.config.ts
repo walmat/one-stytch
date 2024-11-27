@@ -20,9 +20,6 @@ export default {
         "@stytch/react-native-inappbrowser-reborn": {
           '**/*.js':['flow', 'jsx']
         },
-        'expo-linear-gradient': {
-          '**/*.js': ['flow', 'jsx'],
-        },
         '@sentry/react-native': {
           version: '~15.2.0',
           '**/*.js': ['jsx']
