@@ -2,7 +2,7 @@ import { Stack, useLoader, type LoaderProps } from "one";
 import { useCallback } from "react";
 import { RefreshControl } from "react-native";
 import { Button, ScrollView, View } from "tamagui";
-import { useSession } from "~/code/store/session";
+import { useSession } from "~/code/auth/session";
 import { PageContainer } from "~/code/ui/PageContainer";
 
 export async function loader({ path }: LoaderProps) {

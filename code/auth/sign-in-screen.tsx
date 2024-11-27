@@ -3,7 +3,7 @@ import { SchemaForm, formFields } from "~/code/ui/SchemaForm";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { YStack, Theme, Paragraph, H2 } from "tamagui";
-import { useSession } from "~/code/store/session";
+import { useSession } from "~/code/auth/session";
 
 // TODO: Finish this
 /**

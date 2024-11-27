@@ -96,7 +96,6 @@ export function useProtectedRoute(user: User | null) {
 
   useEffect(() => {
     const inAuthGroup = segments[0] === "(auth)";
-    console.log("inAuthGroup", inAuthGroup, user);
 
     if (
       // If the user is not signed in and the initial segment is not anything in the auth group.
@@ -106,8 +105,13 @@ export function useProtectedRoute(user: User | null) {
       // Redirect to the sign-in page.
       replaceRoute("/sign-in");
     } else if (user && inAuthGroup) {
-      // Redirect away from the sign-in page.
-      replaceRoute("/");
+      if (!user.crypto_wallets.length) {
+        // Redirect to the onboarding page.
+        replaceRoute("/onboarding");
+      } else {
+        // Redirect away from the sign-in page.
+        replaceRoute("/");
+      }
     }
   }, [user, segments]);
 }

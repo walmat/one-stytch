@@ -3,8 +3,9 @@ import { Stack } from "one";
 export default function AuthLayout() {
   return (
     <>
-      <Stack.Screen options={{ headerShown: false }} />
-      <Stack />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="sign-in" />
+      </Stack>
     </>
   );
 }

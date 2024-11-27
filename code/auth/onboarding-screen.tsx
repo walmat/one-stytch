@@ -2,6 +2,7 @@ import { Onboarding, OnboardingStepInfo } from "~/code/auth/onboarding";
 import { StepContent } from "~/code/auth/onboarding-step-content";
 import { ArrowUp, Rocket, Sparkles } from "@tamagui/lucide-icons";
 import { useRouter } from "one";
+import { OnboardingWalletStep } from "./onbparding-wallet";
 
 // TODO: Add proper onboarding steps
 /**
@@ -12,13 +13,7 @@ import { useRouter } from "one";
 const steps: OnboardingStepInfo[] = [
   {
     theme: "orange",
-    Content: () => (
-      <StepContent
-        title="Kickstart"
-        icon={Sparkles}
-        description="Auth, profile, settings, adaptive layouts and many more ready for you to build on top of"
-      />
-    ),
+    Content: () => <OnboardingWalletStep />,
   },
   {
     theme: "green",

@@ -26,7 +26,19 @@ export default {
         '@sentry/react-native': {
           version: '~15.2.0',
           '**/*.js': ['jsx']
-        }
+        },
+        'whatwg-url-without-unicode': {
+          '**/*.js': (contents) =>
+            contents
+              ?.replace(
+                /punycode\.ucs2\.decode/gm,
+                '(punycode.ucs2decode || punycode.ucs2.decode)'
+              )
+              ?.replace(
+                /punycode\.ucs2\.encode/gm,
+                '(punycode.ucs2encode || punycode.ucs2.encode)'
+              ),
+        },
       },
 
       app: {

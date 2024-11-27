@@ -7,7 +7,7 @@ import { SchemeProvider, useColorScheme } from "@vxrn/color-scheme";
 import { LoadProgressBar, Slot, Stack } from "one";
 import { isWeb, TamaguiProvider, View } from "tamagui";
 import config from "~/config/tamagui.config";
-import { SessionProvider } from "~/code/store/session";
+import { SessionProvider } from "~/code/auth/session";
 import { StytchProvider, StytchClient } from "@stytch/react-native";
 
 const stytch = new StytchClient(process.env.VITE_STYTCH_PUBLIC_TOKEN ?? "");
@@ -34,41 +34,7 @@ export default function Layout() {
           <SchemeProvider>
             <TamaguiRootProvider>
               <View f={1}>
-                <Stack
-                  screenOptions={{
-                    headerShown: false,
-                  }}
-                >
-                  <Stack.Screen name="(tabs)" />
-                  <Stack.Screen
-                    name="wallets"
-                    options={{
-                      title: "Accounts",
-                      presentation: "modal",
-                      animation: "slide_from_bottom",
-                    }}
-                  />
-                  <Stack.Screen
-                    name="notifications"
-                    options={{
-                      title: "Notifications",
-                      presentation: "modal",
-                      animation: "slide_from_bottom",
-                    }}
-                  />
-                  <Stack.Screen
-                    name="onboarding"
-                    options={{
-                      headerShown: true,
-                    }}
-                  />
-                  <Stack.Screen
-                    name="settings"
-                    options={{
-                      headerShown: true,
-                    }}
-                  />
-                </Stack>
+                <Slot />
               </View>
             </TamaguiRootProvider>
           </SchemeProvider>
